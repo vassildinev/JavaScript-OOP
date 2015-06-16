@@ -26,12 +26,14 @@ function findPrimes(from, to) {
 			}
 		}
 
-		if(isPrime && currentNumber != 1) {
+		if(isPrime && currentNumber > 1) {
 			result.push(currentNumber);
 		}
 	}
 
 	return result;
 }
+
+console.log(findPrimes(0,5));
 
 module.exports = findPrimes;

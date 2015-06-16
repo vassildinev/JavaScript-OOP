@@ -1,6 +1,3 @@
-/* globals describe, it */
-
-
 var solve = require('../tasks/task-2');
 
 var expect = require('chai').expect;
@@ -8,7 +5,11 @@ describe('Tests for "Task 2"', function () {
 	it('expect solve(1, 5) to be equal to [2, 3, 5]', function () {
 		expect(solve(1, 5)).to.eql([2, 3, 5]);
 	});
-
+	
+	it('expect solve(0, 5) to be equal to [2, 3, 5]', function(){
+		expect(solve(0, 5)).to.eql([2, 3, 5]);
+	});
+	
 	it('expect solve("1", "5") to be equal to [2, 3, 5]', function () {
 		expect(solve('1', '5')).to.eql([2, 3, 5]);
 	});
