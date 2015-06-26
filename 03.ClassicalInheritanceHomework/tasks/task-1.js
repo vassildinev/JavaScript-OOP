@@ -17,35 +17,35 @@
 */
 function solve() {
 	var Person = (function () {
-        function validCharacters(value) {
-            for(var i = 0, len = value.length; i < len; i += 1) {
-                var code = value.charCodeAt(i);
+        function validateName(name) {
+            if(typeof name !== 'string') {
+                throw new Error('Name must be a valid string');
+            }
+
+            if(name.length < 3 || name.length > 20) {
+                throw new Error('Invalid name length');
+            }
+
+            for(var i = 0, len = name.length; i < len; i += 1) {
+                var code = name.charCodeAt(i);
 
                 if(!(((code >= 65) && (code <= 90)) || ((code >= 97) && (code <= 122)))) {
-                    return false;
+                    throw new Error('Name must contain only Latin letters')
                 }
             }
-
-            return true;
         }
 
-        function validateFirstName(value) {
-            if((value.length < 3 || value.length > 20) || !validCharacters(value)) {
-                throw new Error("Invalid first name length or characters");
+        function validateAge(age) {
+            function isNumber(n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
             }
-        }
 
-        function validateLastName(value) {
-            if((value.length < 3 || value.length > 20) || !validCharacters(value)) {
-                throw new Error("Invalid last name length");
+            if(typeof age !== 'Number' && !isNumber(age)) {
+                throw new Error('Age must be a number');
             }
-        }
 
-        function validateAge(value) {
-            value |= 0;
-
-            if(value < 0 || value > 150) {
-                throw new Error("Invalid age");
+            if(age < 0 || age > 150) {
+                throw new Error('Age must be a valid number between 0 and 150');
             }
         }
 
@@ -55,69 +55,74 @@ function solve() {
             this.age = age;
 		}
 
-        Object.defineProperty(Person.prototype, 'firstname' , {
-            get:
-                function () {
+        Object.defineProperties(Person.prototype, {
+            firstname: {
+                get: function() {
                     return this._firstname;
                 },
-            set: function (value) {
-                validateFirstName(value);
-                this._firstname = value;
-                return this;
-            }
-        });
 
-        Object.defineProperty(Person.prototype, 'lastname' , {
-            get:
-                function () {
+                set: function(value) {
+                    validateName(value);
+                    this._firstname = value;
+                    return this;
+                }
+            },
+
+            lastname: {
+                get: function() {
                     return this._lastname;
                 },
-            set: function (value) {
-                validateLastName(value);
-                this._lastname = value;
-                return this;
-            }
-        });
 
-        Object.defineProperty(Person.prototype, 'age' , {
-            get:
-                function () {
+                set: function(value) {
+                    validateName(value);
+                    this._lastname = value;
+                    return this;
+                }
+            },
+
+            age: {
+                get: function() {
                     return this._age;
                 },
-            set: function (value) {
-                validateAge(value);
-                this._age = value;
-                return this;
-            }
-        });
 
-        Object.defineProperty(Person.prototype, 'fullname' , {
-            get:
-                function () {
-                    return this._firstname + ' ' + this._lastname;
+                set: function(value) {
+                    validateAge(value);
+                    this._age = value;
+                    return this;
+                }
+            },
+
+            fullname: {
+                get: function() {
+                    return this.firstname + ' ' + this.lastname;
                 },
-            set: function (value) {
-                var fname = value.split(' ')[0],
-                    lname = value.split(' ')[1];
 
-                validateFirstName(fname);
-                validateLastName(lname);
+                set: function(value) {
+                    var names = value.split(' '),
+                        fname = names[0],
+                        lname = names[1];
 
-                this._firstname = fname;
-                this._lastname = lname;
+                    validateName(fname);
+                    validateName(lname);
 
-                return this;
+                    this.firstname = fname;
+                    this.lastname = lname;
+
+                    return this;
+                }
+            },
+
+            introduce: {
+                value: function() {
+                    return 'Hello! My name is ' + this.fullname + ' and I am ' + this.age + '-years-old'
+                }
             }
         });
-
-        Person.prototype.introduce = function () {
-            return 'Hello! My name is ' + this.fullname + ' and I am ' + this.age + '-years-old';
-        };
-
+		
 		return Person;
 	} ());
 
-    return Person;
+	return Person;
 }
 
 module.exports = solve;
